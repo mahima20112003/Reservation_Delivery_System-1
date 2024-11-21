@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Restaurant Management System</title>
+    <style>
+        /* Common styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #ff5722;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        /* Payment Options */
+        .payment-options label {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .payment-options input {
+            margin-right: 5px;
+        }
+
+        .confirm {
+            background-color: #ff5722;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .confirm:hover {
+            background-color: #e64a19;
+        }
+
+        /* Order Summary Section */
+        .order-summary {
+            padding: 15px;
+            background-color: #fff5f1;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .order-table th, .order-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .order-table th {
+            background-color: #ff5722;
+            color: white;
+            font-weight: bold;
+        }
+
+        .total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff5722;
+            text-align: right;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Checkout</h1>
+    </header>
+    <div class="container">
+        <div id="orderSummary" class="order-summary"></div>
+
+        <h2>Delivery Details</h2>
+        <form id="checkoutForm">
+            <input type="text" id="address" name="address" placeholder="Enter your delivery address" required>
+            <input type="text" id="contact" name="contact" placeholder="Enter your contact number" required>
+            
+            <h2>Payment Options</h2>
+            <div id="paymentOptions" class="payment-options"></div>
+            
+            <button class="confirm" type="button" onclick="confirmOrder()">Confirm Order</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchPaymentOptions();
+            const cartData = JSON.parse(localStorage.getItem('cartData'));
+            if (cartData) {
+                displayOrderSummary(cartData);
+            }
+        });
+
+        // Function to display the cart/order summary as a table
+        function displayOrderSummary(cartData) {
+            const orderSummaryDiv = document.getElementById('orderSummary');
+            let total = 0;
+            orderSummaryDiv.innerHTML = '<h2>Order Summary</h2>';
+            
+            // Create table
+            const table = document.createElement('table');
+            table.className = 'order-table';
+            const thead = document.createElement('thead');
+            thead.innerHTML = '<tr><th>Item Name</th><th>Quantity</th><th>Price (₹)</th></tr>';
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            cartData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.itemName}</td>
+                    <td>${item.quantity}</td>
+                    <td>₹${(item.price * item.quantity).toFixed(2)}</td>
+                `;
+                tbody.appendChild(row);
+                total += item.price * item.quantity;
+            });
+            table.appendChild(tbody);
+
+            orderSummaryDiv.appendChild(table);
+
+            // Display total value
+            orderSummaryDiv.innerHTML += `<p class="total">Total: ₹${total.toFixed(2)}</p><p hidden id="orderValue" class="total">Total: ₹${total.toFixed(2)}</p>`;
+            
+        }
+
+        async function fetchPaymentOptions() {
+            try {
+                const response = await fetch('/api/payment-options');
+                const paymentOptions = await response.json();
+                const paymentOptionsDiv = document.getElementById('paymentOptions');
+                paymentOptions.forEach(option => {
+                    const label = document.createElement('label');
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'paymentOption';
+                    radio.id = option.paytype_id;
+                    radio.value = option.paytype_name;
+                    label.appendChild(radio);
+                    label.append(` ${option.paytype_name}`);
+                    paymentOptionsDiv.appendChild(label);
+                });
+            } catch (error) {
+                console.error('Error fetching payment options:', error);
+            }
+        }
+
+        async function confirmOrder() {
+            const address = document.getElementById('address').value;
+            const contact = document.getElementById('contact').value;
+            const paymentOption = document.querySelector('input[name="paymentOption"]:checked')?.id;
+            const orderValue = parseFloat(document.getElementById('orderValue').textContent);
+            const cartData = JSON.parse(localStorage.getItem('cartData'));
+            const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+            const res_id = JSON.parse(localStorage.getItem('restaurant'));
+
+            const orderDetails = {
+                items: cartData.map(item => ({ item_id: item.item_id, quantity: item.quantity })),
+                user_id: userDetails.userId,
+                order_value: orderValue,
+                payment_id: paymentOption,
+                res_id: res_id,
+                address,
+                contact,
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderDetails)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.order_id) {
+                        localStorage.setItem('order_id', data.order_id);
+                        window.location.href = "/order-success.html";
+                    } else {
+                        alert("Order creation failed. Please try again.");
+                    }
+                } else {
+                    throw new Error('Failed to create order.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("An error occurred while placing the order.");
+            }
+        }
+    </script>
+</body>
+</html>

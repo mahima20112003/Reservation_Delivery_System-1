@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - MV Food Delivery</title>
+    <style>
+        /* Center the container on the entire page */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            background-image: url('home and other page.jpg'); /* Replace with your image URL */
+        }
+
+        /* Style for the signup container */
+        .signup-container {
+            position: relative;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .signup-form h2 {
+            font-size: 24px;
+            color: #333333;
+            margin: 0;
+            text-align: center;
+        }
+
+        .signup-form label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555555;
+            text-align: left;
+        }
+
+        .signup-form input[type="email"],
+        .signup-form input[type="text"],
+        .signup-form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .signup-form button {
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            background-color: #333333;
+            color: #ffffff;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .signup-form button:hover {
+            background-color: #555555;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-form">
+            <h2>Signup</h2>
+            <form id="signupForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Register</button>
+                <button type="button" onclick="window.location.href='index.html'">Back to Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="javascript/signup.js"></script> <!-- JavaScript for handling form submission -->
+</body>
+</html>

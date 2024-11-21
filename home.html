@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Management System</title>
+    <style>
+        /* Reset styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+			background-image: url('home and other page.jpg'); /* Replace with your image URL */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Header styling */
+        header {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            color: #fc8019;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* User info styling */
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .sign-out-btn {
+            background-color: #fc8019;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .sign-out-btn:hover {
+            background-color: #ff9c42;
+        }
+
+        /* Main container */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin-top: 30px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        /* Option card styling */
+        .option-card {
+            background-color: #ffffff;
+            width: 250px;
+            padding: 40px 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .option-card h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .option-card p {
+            font-size: 1rem;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .option-card button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #fc8019;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .option-card button:hover {
+            background-color: #ff9c42;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header section -->
+    <header>
+        <h1>Welcome to Our Restaurant</h1>
+        <p>Your one-stop solution for dining reservations and online ordering.</p>
+
+        <!-- User Info and Sign-out -->
+        <div class="user-info" id="user-info">
+            <!-- User details will be injected here -->
+            <span id="username"></span>
+            <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
+        </div>
+    </header>
+
+    <!-- Main container with options -->
+    <div class="container">
+        
+		
+		<div class="option-card" onclick="goToOrderPage()">
+    <h2>Order Online</h2>
+    <p>Explore our menu and place your order online.</p>
+    <button>Order Now</button>
+</div>
+
+        <!-- Reservation Card -->
+        <div class="option-card" onclick="window.location.href='reservation.html'">
+            <h2>Reservation</h2>
+            <p>Reserve a table and enjoy a great dining experience.</p>
+            <button>Book a Table</button>
+        </div>
+    </div>
+
+    <script>
+        // Fetch user details from localStorage and display them
+        document.addEventListener('DOMContentLoaded', function() {
+            const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+            if (userDetails) {
+                document.getElementById('username').textContent = `Hello, ${userDetails.username}`;
+            } else {
+                // Redirect to login page if no user details are found
+                window.location.href = 'index.html';
+            }
+        });
+		
+		function goToOrderPage() {
+        const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+        if (userDetails) {
+            // Send user details as URL parameters
+            //const { userId, username } = userDetails;
+            window.location.href = `order.html`;
+        } else {
+            // Redirect to login if user details are not found
+            window.location.href = 'index.html';
+        }
+    }
+
+        // Function to sign out
+        function signOut() {
+            localStorage.removeItem('userDetails');  // Clear user data from localStorage
+            window.location.href = 'index.html';  // Redirect to login page
+        }
+    </script>
+</body>
+</html>

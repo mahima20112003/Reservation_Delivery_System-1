@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation - Restaurant Management System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff5722;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            display: block;
+            margin-top: 10px;
+        }
+
+        select, input {
+            padding: 10px;
+            width: 100%;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background-color: #ff5722;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background-color: #e64a19;
+        }
+
+        .message {
+            font-size: 16px;
+            color: green;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            font-size: 16px;
+            color: red;
+            margin-top: 20px;
+        }
+
+        .back-btn, .signout-btn {
+            background-color: #2196F3;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-btn:hover, .signout-btn:hover {
+            background-color: #1976D2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Table Reservation</h1>
+
+    <h2>Choose a Restaurant and Number of Seats</h2>
+
+    <!-- Restaurant Dropdown -->
+    <label for="restaurant">Select Restaurant</label>
+    <select id="restaurant">
+        <option value="">Select a Restaurant</option>
+        <!-- Restaurants will be dynamically added here -->
+    </select>
+
+    <!-- Seats input -->
+    <label for="seats">Seats Requested</label>
+    <input type="number" id="seats" placeholder="Enter number of seats" required min="1">
+
+    <button class="btn" onclick="submitReservation()">Reserve Table</button>
+
+    <div class="message" id="successMessage"></div>
+    <div class="error-message" id="errorMessage"></div>
+
+    <!-- Back to Home Button -->
+    <button class="back-btn" onclick="goHome()">Back to Home</button>
+
+    <!-- Sign Out Button -->
+    <button class="signout-btn" onclick="signOut()">Sign Out</button>
+</div>
+
+<script>
+    // Function to fetch restaurant data and populate the dropdown
+    async function loadRestaurants() {
+        try {
+            const response = await fetch('/api/restaurants');
+            const data = await response.json();
+            const restaurantDropdown = document.getElementById('restaurant');
+            data.forEach(restaurant => {
+                const option = document.createElement('option');
+                option.value = restaurant.res_id;
+                option.textContent = restaurant.res_name;
+                restaurantDropdown.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error loading restaurants:", error);
+        }
+    }
+
+    // Load restaurants when the page is loaded
+    window.onload = loadRestaurants;
+
+    // Function to handle reservation submission
+    async function submitReservation() {
+        const resId = document.getElementById('restaurant').value;
+        const seatsRequested = document.getElementById('seats').value;
+        const userDetails = JSON.parse(localStorage.getItem('userDetails')); 
+        const userId = userDetails.userId;
+
+        // Validate user input
+        if (!resId || !seatsRequested) {
+            document.getElementById('errorMessage').textContent = "Please select a restaurant and enter the number of seats.";
+            return;
+        }
+
+        try {
+            // Fetch available tables for the selected restaurant based on seats requested
+            const response = await fetch(`/api/check-availability?res_id=${resId}&seats_requested=${seatsRequested}`);
+            const resp = await response.json();
+            const tables = resp.tables;
+            if (tables.length > 0) { 
+                const tableId = tables[0].table_id;
+
+                // Make the reservation by calling the API
+                const reservationResponse = await fetch('/api/make-reservation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        table_id: tableId,
+                        seats_requested: seatsRequested
+                    })
+                });
+
+                const reservationData = await reservationResponse.json();
+                if (reservationData.success) {
+                    document.getElementById('successMessage').textContent = `Reservation successful! Your booking ID is: ${reservationData.booking_id}`;
+                    document.getElementById('errorMessage').textContent = '';
+                } else {
+                    document.getElementById('errorMessage').textContent = "Reservation failed, please try again.";
+                    document.getElementById('successMessage').textContent = '';
+                }
+            } else {
+                document.getElementById('errorMessage').textContent = "No available tables for the requested number of seats.";
+                document.getElementById('successMessage').textContent = '';
+            }
+        } catch (error) {
+            console.error("Error making reservation:", error);
+            document.getElementById('errorMessage').textContent = "An error occurred, please try again later.";
+            document.getElementById('successMessage').textContent = '';
+        }
+    }
+
+    // Function to go back to the home page
+    function goHome() {
+        window.location.href = '/home.html';  // Redirect to home page
+    }
+
+    // Function to sign out
+    function signOut() {
+        localStorage.removeItem('userDetails'); // Remove user details from localStorage
+        window.location.href = '/login.html';  // Redirect to login page
+    }
+</script>
+
+</body>
+</html>

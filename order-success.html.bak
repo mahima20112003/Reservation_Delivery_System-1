@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success - Restaurant Management System</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container for the page content */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff5722;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            font-size: 20px;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        /* Order summary table styling */
+        .order-summary table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .order-summary table, .order-summary th, .order-summary td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .order-summary th {
+            background-color: #ff5722;
+            color: #fff;
+            text-align: left;
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 18px;
+            color: #ff5722;
+            text-align: right;
+            padding-top: 10px;
+        }
+
+        /* Button styling */
+        .btn {
+            background-color: #ff5722;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #e64a19;
+        }
+
+        /* Address and payment details section */
+        .details {
+            background-color: #fafafa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Order Successful!</h1>
+        <div id="orderDetails" class="order-summary"></div>
+        <a href="/" class="btn">Go to Home</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const orderDetails = JSON.parse(localStorage.getItem('orderDetails'));
+            const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+            const orderId = localStorage.getItem('order_id');
+
+            if (orderDetails && userDetails) {
+                const orderDetailsDiv = document.getElementById('orderDetails');
+                let total = 0;
+
+                // Display username and order summary
+                orderDetailsDiv.innerHTML = `<h2>Thank you, ${userDetails.username}!</h2><h3>Order Summary</h3>`;
+
+                // Create table for order summary
+                let tableHTML = `
+                    <table>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>`;
+
+                // Populate the table rows with order items
+                orderDetails.cartData.forEach(item => {
+                    total += item.price * item.quantity;
+                    tableHTML += `
+                        <tr>
+                            <td>${item.itemName}</td>
+                            <td>${item.quantity}</td>
+                            <td>₹${(item.price * item.quantity).toFixed(2)}</td>
+                        </tr>`;
+                });
+
+                tableHTML += `</table>`;
+                orderDetailsDiv.innerHTML += tableHTML;
+                orderDetailsDiv.innerHTML += `<p class="total">Total: ₹${total.toFixed(2)}</p>`;
+
+                // Display order ID, delivery address, and payment method
+                orderDetailsDiv.innerHTML += `
+                    <div class="details">
+                        <h3>Order ID</h3>
+                        <p>${orderId}</p>
+                        <h3>Delivery Address</h3>
+                        <p>${orderDetails.address}</p>
+                        <h3>Contact Number</h3>
+                        <p>${orderDetails.contact}</p>
+                        <h3>Payment Method</h3>
+                        <p>${orderDetails.paymentOption}</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+
+</body>
+</html>

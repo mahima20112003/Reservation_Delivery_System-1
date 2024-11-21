@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+}
+
+.container {
+    width: 90%;
+    margin: 20px auto;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #1d1d1d;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    color: #555;
+}
+
+table th {
+    background-color: #ff6600;
+    color: white;
+    font-size: 16px;
+}
+
+table td {
+    font-size: 14px;
+}
+
+table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.table-container {
+    margin-bottom: 30px;
+}
+
+.table-title {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Style the buttons for interactivity */
+button {
+    padding: 10px 20px;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #e55a00;
+}
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+}
+
+button {
+    background-color: #ff6600;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #e55a00;
+}
+
+</style>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+
+        <!-- Restaurant Details Section -->
+        <div class="table-container">
+            <h2 class="table-title">Restaurant Details</h2>
+            <table id="restaurant-details">
+                <thead>
+                    <tr>
+                        <th>Restaurant ID</th>
+                        <th>Restaurant Name</th>
+                        <th>Menu ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be injected here by JavaScript -->
+                </tbody>
+            </table>
+			<!-- Edit Form Modal -->
+<div id="edit-restaurant-modal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Restaurant Details</h3>
+        <form id="edit-restaurant-form">
+            <input type="hidden" id="edit-res-id" name="res_id">
+            <label for="edit-res-name">Restaurant Name:</label>
+            <input type="text" id="edit-res-name" name="res_name" required>
+            <label for="edit-menu-id">Menu ID:</label>
+            <input type="text" id="edit-menu-id" name="menu_id" required>
+            <button type="submit">Update</button>
+            <button type="button" id="cancel-edit">Cancel</button>
+        </form>
+    </div>
+</div>
+        </div>
+
+        <!-- Menu Items Section -->
+        <div class="table-container">
+            <h2 class="table-title">Menu Items</h2>
+            <table id="menu-items">
+                <thead>
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Item Name</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be injected here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table Details Section -->
+        <div class="table-container">
+            <h2 class="table-title">Table Details</h2>
+            <table id="table-details">
+                <thead>
+                    <tr>
+                        <th>Table ID</th>
+                        <th>Table Name</th>
+                        <th>Seating Capacity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be injected here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Include JavaScript file -->
+    <script src="javascript/admin-dashboard.js"></script>
+</body>
+</html>

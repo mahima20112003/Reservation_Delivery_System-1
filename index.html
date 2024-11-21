@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        /* CSS Styling */
+
+        /* Center the container on the entire page */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+			background-image: url('home and other page.jpg'); /* Replace with your image URL */
+        }
+
+        /* Style for the login container */
+        .login-container {
+            position: relative;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        /* Logo styling in top-right corner */
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .logo img {
+            width: 50px; /* Adjusted logo size */
+            height: auto;
+        }
+
+        /* Form heading centered */
+        .login-form h2 {
+            font-size: 24px;
+            color: #333333;
+            margin: 0;
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        /* Form labels and input styling */
+        .login-form label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555555;
+            text-align: left;
+        }
+
+        .login-form input[type="email"],
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        /* Button styling */
+        .login-form button {
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            background-color: #333333;
+            color: #ffffff;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-form button:hover {
+            background-color: #555555;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo in the top-right corner -->
+        <div class="logo">
+            <img src="R&D logo.webp" alt="Logo"> <!-- Adjust path if needed -->
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-form">
+            <h2>Login</h2> <!-- Centered title -->
+            <form id="loginForm">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">Login</button>
+                
+                <!-- Sign Up Button -->
+                <button type="button" onclick="window.location.href='signup.html'">Sign Up</button>
+
+                <!-- Error Message Display -->
+                <p class="error-message" id="errorMessage">Please enter a valid email and username.</p>
+            </form>
+        </div>
+    </div>
+
+    
+</body>
+<script src="javascript/auth.js"></script>
+</html>
